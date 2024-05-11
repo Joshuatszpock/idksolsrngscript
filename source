@@ -1,0 +1,160 @@
+local replicatedStorage = game:GetService("ReplicatedStorage")
+
+local useItem = replicatedStorage.Modules.Inventory.UseItem
+
+local function usePotion(potion, amt)
+	local itemName = potion;
+	local itemAmt = amt;
+	
+	UseItem:FireServer(itemName, itemAmt);
+end
+
+------------------
+--[[ UI Setup ]]--
+------------------
+
+
+local uiLibrary = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local mainWindow = uiLibrary:CreateWindow({
+	Name = "Sol's RNG";
+	LoadingTitle = "Loading script...";
+	loadingSubtitle = "Have fun!";
+	ConfigurationSaving = {
+		Enabled = true;
+		FolderName = "Sol's_RNG_Data";
+		FileName = "Sol's_RNG";
+	};
+	Discord = {
+		Enabled = false;
+		Invite = "No Discord Server!";
+		RememberJoins = false;
+	};
+	KeySystem = false;
+	KeySettings = {
+		Title = "Sol's RNG";
+		Subtitle = "Key is 1234";
+		Note = "No method of obtaining the key is provided(actually i cracked it)";
+		FileName = "Sol's_RNG_Key";
+		SaveKey = true;
+		GrabKeyFromSite = false;
+		Key = {"1234"};
+	};
+});
+
+local farmTab = mainWindow:CreateTab("Autofarm", nil);
+local boostsTab = mainWindow:CreateTab("Boosts", nil);
+local settingsTab = mainWindow:CreateTab("Settings", nil);
+
+uiLibrary:Notify({
+	Title = "Script loaded Successfully!";
+	Content = "Enjoy the script, and good luck!\nYou can toggle the UI by pressing Left Control.";
+	Duration = 5.0;
+	Image = nil;
+	Actions = {
+		Ignore = {
+			Name = "Thanks!";
+			Callback = function()
+				print("The user closed the Tab!");
+			end
+		};
+	};
+});
+
+--------------------
+--[[ farmTab UI ]]--
+--------------------
+
+local autoItems = farmTab:CreateToggle({
+	Name = "Auto Walk to Items";
+	CurrentValue = false;
+	Flag = "autoItems";
+	Callback = function(state)
+		print("autoItems: " .. state);
+	end
+});
+
+--------------------
+--[[ boostsTab UI ]]--
+--------------------
+
+local potionsSection = boostsTab:CreateSection("Potions");
+
+local autoLuck = boostsTab:CreateToggle({
+	Name = "Auto Use Luck Potion";
+	CurrentValue = false;
+	Flag = "autoLuck";
+	Callback = function(state)
+		print("autoLuck: " .. state);
+	end
+});
+
+local autoSpeed = boostsTab:CreateToggle({
+	Name = "Auto Use Speed Potion";
+	CurrentValue = false;
+	Flag = "autoSpeed";
+	Callback = function(state)
+		print("autoSpeed: " .. state);
+	end
+});
+
+local luckAmtToUse = 1
+local useLuck = boostsTab:CreateButton({
+	Name = ("Use %s Luck Potion", luckAmtToUse);
+	Callback = function(state)
+		if state then
+			task.spawn(function()
+				while state and task.wait(0.1) do
+					usePotion("Luck Potion", luckAmtToUse);
+				end
+			end)
+		end
+	end
+});
+
+local luckAmt = boostsTab:CreateInput({
+	Name = "Amount to Use";
+	PlaceholderText = "1";
+	RemoveTextAfterFocusLost = false;
+	Callback = function(text)
+		luckAmtToUse = tonumber(text);
+	end;
+});
+
+local speedAmtToUse = 1
+local useSpeed = boostsTab:CreateButton({
+	Name = ("Use %s Speed Potion", speedAmtToUse);
+	Callback = function(state)
+		if state then
+			task.spawn(function()
+				while state and task.wait(0.1) do
+					usePotion("Speed Potion", speedAmtToUse);
+				end
+			end)
+		end
+	end
+});
+
+local speedAmt = boostsTab:CreateInput({
+	Name = "Amount to Use";
+	PlaceholderText = "1";
+	RemoveTextAfterFocusLost = false;
+	Callback = function(text)
+		speedAmtToUse = tonumber(text);
+	end;
+});
+
+local obbySection = boostsTab:CreateSection("Obby");
+
+local autoObby = boostsTab:CreateToggle({
+	Name = "Auto Complete Obby";
+	CurrentValue = false;
+	Flag = "autoObby";
+	Callback = function(state)
+		print("autoObby: " .. state);
+	end
+});
+
+--------------------
+--[[ settingsTab UI ]]--
+--------------------
